@@ -1,0 +1,119 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty members
+interface Storable {
+  + Type() byte
+  + Size() int
+  + Dump() []string
+  + Load(tokens []string) error
+  + Show() string
+}
+class Array {
+  - data : []string
+  - length : int
+  + Push(v)
+  + Insert(i, v) error
+  + Get(i) (string, error)
+  + Set(i, v) error
+  + Erase(i) (string, error)
+}
+class SinglyList {
+  - head, tail : *snode
+  - n : int
+  + PushHead(v) / PushTail(v)
+  + PushAfter(t, v) / PushBefore(t, v) error
+  + PopHead() / PopTail() (string, error)
+  + DelAfter(t) / DelBefore(t) (string, error)
+  + DelValue(v) bool
+  + Find(v) int
+  + At(i) (string, error)
+}
+class DoublyList {
+  - head, tail : *dnode
+  - n : int
+  + PushHead / PushTail / PushAfter / PushBefore
+  + PopHead() / PopTail() (string, error)
+  + DelAfter / DelBefore / DelValue
+  + Find(v) int
+  + At(i) (string, error)
+  + ItemsReversed() []string
+}
+class Stack {
+  - l : SinglyList
+  + Push(v)
+  + Pop() (string, error)
+  + Items() []string
+}
+class Queue {
+  - l : SinglyList
+  + Push(v)
+  + Pop() (string, error)
+  + Items() []string
+}
+class CompleteTree {
+  - root : *tnode
+  + Insert(k) (string, error)
+  + Contains(k) (bool, error)
+  + IsComplete() bool
+  + Traverse(order) ([]string, error)
+}
+class HashTable {
+  - method : Method
+  - slots : *Array
+  - cells, count, tombs : int
+  - autoGrow, useBloom : bool
+  - bloom : *BloomFilter
+  + Put(k, v) (bool, error)
+  + Get(k) (string, bool)
+  + Contains(k) bool
+  + Erase(k) bool
+  + Capacity() int
+  + Stats() string
+}
+class BloomFilter {
+  - words : []uint64
+  - m : int
+  - k = 3 (const)
+  + Add(key)
+  + MightContain(key) bool
+  + Reset(bits)
+  + Bits() int
+  + SetBits() int
+}
+class "serializer.go" <<functions>> {
+  + SaveText / LoadText(obj, io)
+  + SaveBinary / LoadBinary(obj, io)
+  + Save/Load...File(obj, path)
+}
+class "factory.go" <<functions>> {
+  + Create(t byte) (Storable, error)
+}
+class snode <<struct>> {
+  + val : string
+  + next : *snode
+}
+class dnode <<struct>> {
+  + val : string
+  + prev, next : *dnode
+}
+class tnode <<struct>> {
+  + key : string
+  + left, right : *tnode
+}
+Storable <|.. Array
+Storable <|.. SinglyList
+Storable <|.. DoublyList
+Storable <|.. Stack
+Storable <|.. Queue
+Storable <|.. CompleteTree
+Storable <|.. HashTable
+Stack *-- "1" SinglyList
+Queue *-- "1" SinglyList
+HashTable *-- "1" Array
+HashTable *-- "1" BloomFilter
+SinglyList o-- "0..*" snode
+DoublyList o-- "0..*" dnode
+CompleteTree o-- "0..*" tnode
+"serializer.go" ..> Storable
+"factory.go" ..> Storable
+@enduml

@@ -1,0 +1,35 @@
+digraph UML {
+  rankdir=BT; nodesep=0.35; ranksep=0.7; splines=true;
+  node [shape=record, fontname="DejaVu Sans", fontsize=10, style=filled, fillcolor="#FFFFEE"];
+  edge [fontname="DejaVu Sans", fontsize=9];
+  Storable [label="{\<\<interface\>\>\nStorable||+ Type() byte\l+ Size() int\l+ Dump() []string\l+ Load(tokens []string) error\l+ Show() string\l}", fillcolor="#E8F0FF"];
+  Array [label="{Array|- data : []string\l- length : int\l|+ Push(v)\l+ Insert(i, v) error\l+ Get(i) (string, error)\l+ Set(i, v) error\l+ Erase(i) (string, error)\l}", fillcolor="#FFFFEE"];
+  SinglyList [label="{SinglyList|- head, tail : *snode\l- n : int\l|+ PushHead(v) / PushTail(v)\l+ PushAfter(t, v) / PushBefore(t, v) error\l+ PopHead() / PopTail() (string, error)\l+ DelAfter(t) / DelBefore(t) (string, error)\l+ DelValue(v) bool\l+ Find(v) int\l+ At(i) (string, error)\l}", fillcolor="#FFFFEE"];
+  DoublyList [label="{DoublyList|- head, tail : *dnode\l- n : int\l|+ PushHead / PushTail / PushAfter / PushBefore\l+ PopHead() / PopTail() (string, error)\l+ DelAfter / DelBefore / DelValue\l+ Find(v) int\l+ At(i) (string, error)\l+ ItemsReversed() []string\l}", fillcolor="#FFFFEE"];
+  Stack [label="{Stack|- l : SinglyList\l|+ Push(v)\l+ Pop() (string, error)\l+ Items() []string\l}", fillcolor="#FFFFEE"];
+  Queue [label="{Queue|- l : SinglyList\l|+ Push(v)\l+ Pop() (string, error)\l+ Items() []string\l}", fillcolor="#FFFFEE"];
+  CompleteTree [label="{CompleteTree|- root : *tnode\l|+ Insert(k) (string, error)\l+ Contains(k) (bool, error)\l+ IsComplete() bool\l+ Traverse(order) ([]string, error)\l}", fillcolor="#FFFFEE"];
+  HashTable [label="{HashTable|- method : Method\l- slots : *Array\l- cells, count, tombs : int\l- autoGrow, useBloom : bool\l- bloom : *BloomFilter\l|+ Put(k, v) (bool, error)\l+ Get(k) (string, bool)\l+ Contains(k) bool\l+ Erase(k) bool\l+ Capacity() int\l+ Stats() string\l}", fillcolor="#FFFFEE"];
+  BloomFilter [label="{BloomFilter|- words : []uint64\l- m : int\l- k = 3 (const)\l|+ Add(key)\l+ MightContain(key) bool\l+ Reset(bits)\l+ Bits() int\l+ SetBits() int\l}", fillcolor="#FFFFEE"];
+  serializer_go [label="{\<\<functions\>\>\nserializer.go||+ SaveText / LoadText(obj, io)\l+ SaveBinary / LoadBinary(obj, io)\l+ Save/Load...File(obj, path)\l}", fillcolor="#FFFFEE"];
+  factory_go [label="{\<\<functions\>\>\nfactory.go||+ Create(t byte) (Storable, error)\l}", fillcolor="#FFFFEE"];
+  snode [label="{\<\<struct\>\>\nsnode|+ val : string\l+ next : *snode\l|}", fillcolor="#FFFFEE"];
+  dnode [label="{\<\<struct\>\>\ndnode|+ val : string\l+ prev, next : *dnode\l|}", fillcolor="#FFFFEE"];
+  tnode [label="{\<\<struct\>\>\ntnode|+ key : string\l+ left, right : *tnode\l|}", fillcolor="#FFFFEE"];
+  Array -> Storable [arrowhead=empty, style=dashed];
+  SinglyList -> Storable [arrowhead=empty, style=dashed];
+  DoublyList -> Storable [arrowhead=empty, style=dashed];
+  Stack -> Storable [arrowhead=empty, style=dashed];
+  Queue -> Storable [arrowhead=empty, style=dashed];
+  CompleteTree -> Storable [arrowhead=empty, style=dashed];
+  HashTable -> Storable [arrowhead=empty, style=dashed];
+  SinglyList -> Stack [arrowhead=diamond, label="1"];
+  SinglyList -> Queue [arrowhead=diamond, label="1"];
+  Array -> HashTable [arrowhead=diamond, label="1"];
+  BloomFilter -> HashTable [arrowhead=diamond, label="1"];
+  snode -> SinglyList [dir=back, arrowtail=vee, label="0..*"];
+  dnode -> DoublyList [dir=back, arrowtail=vee, label="0..*"];
+  tnode -> CompleteTree [dir=back, arrowtail=vee, label="0..*"];
+  serializer_go -> Storable [style=dashed, arrowhead=vee];
+  factory_go -> Storable [style=dashed, arrowhead=vee];
+}

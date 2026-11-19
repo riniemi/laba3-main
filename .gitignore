@@ -1,0 +1,14 @@
+# C++: результаты сборки и объектные файлы
+build/
+
+# C++: HTML-отчёты покрытия (генерируются командой make cpp-cover)
+coverage_cpp.*
+
+# Go: отчёты покрытия (генерируются командой make cover)
+go/coverage.html
+go/coverage.out
+go/coverage_func.txt
+
+# Редакторы и прочее
+*.swp
+.DS_Store

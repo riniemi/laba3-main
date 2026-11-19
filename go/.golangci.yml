@@ -1,0 +1,14 @@
+# Конфигурация golangci-lint для проекта ЛР3 (Go).
+# Запуск: golangci-lint run ./...   (или make lint из каталога go/)
+run:
+  timeout: 3m
+
+linters:
+  enable:
+    - errcheck      # непроверенные ошибки
+    - govet         # стандартный go vet
+    - ineffassign   # бесполезные присваивания
+    - staticcheck   # глубокий анализ кода
+    - unused        # неиспользуемые функции, типы, поля
+    - gofmt         # форматирование
+    - misspell      # опечатки в комментариях
